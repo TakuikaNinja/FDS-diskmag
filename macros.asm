@@ -17,7 +17,7 @@
 	ldy #(length)
 	jsr PrepareVRAMString
 	.addr addr16
-	sta StringStatus
+;	sta StringStatus
 .endmacro
 
 ; macros for use with the FDS BIOS VRAM struct format

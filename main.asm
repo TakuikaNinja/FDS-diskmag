@@ -48,6 +48,7 @@ Reset:
 		sta PPU_CTRL
 		
 Main:
+		jsr ReadOrDownPads								; read controllers + expansion port
 		jsr ProcessBGMode
 		jsr WaitForNMI
 		beq Main										; back to main loop
@@ -82,7 +83,6 @@ NonMaskableInterrupt:
 
 :
 		dec NMIReady
-		jsr ReadOrDownPads								; read controllers + expansion port
 
 NotReady:
 		jsr SetScroll									; remember to set scroll on lag frames
@@ -117,7 +117,16 @@ IRQHandler:
 		jmp @Exit
   
 @Watchdog:
+	.ifdef DEBUG
+		ldx PPU_MASK_MIRROR
+		txa
+		inx ; set grayscale for visual feedback on hardware
+		stx PPU_MASK
 		jsr Delay131 ; call $E149 to safely refresh DRAM rows
+		sta PPU_MASK
+	.else
+		jsr Delay131 ; call $E149 to safely refresh DRAM rows
+	.endif
 
 @Exit:
 		pla ; restore Y/X/A and exit
@@ -186,11 +195,15 @@ ProcessBGMode:
 ; Initialise background to display the program name
 BGInit:
 		jsr DisableRendering
+		; palette data goes into vblank buffer to avoid visible stripes
+		vram_string $3f00, PaletteData, PaletteDataSize
+		inc NeedDraw
 		jsr WaitForNMI
 		jsr VRAMStructWrite
-	.addr BGData
-		lda #_default_Intro
-;		lda #_default_Reading
+	.addr TextData
+		
+;		lda #_default_Intro
+		lda #_default_Reading
 		sta currentTrack
 		jsr sabre_playTrack
 		inc Mode
@@ -200,16 +213,10 @@ BGInit:
 DoNothing:
 		rts
 
-; VRAM transfer structure
-BGData:
-
+; Palette data
 ; Just write to all 16 entries so PPUADDR safely leaves the palette RAM region
 ; PPUADDR ends at $3F20 before the next write (avoids rare palette corruption)
 ; (palette entries will never be changed anyway, so we might as well set them all)
-Palettes:
-	.dbyt $3f00
-	encode_length INC1, COPY, PaletteDataSize
-
 .proc PaletteData
 	.repeat 8
 	.byte $0f, $00, $10, $20
@@ -217,6 +224,7 @@ Palettes:
 .endproc
 PaletteDataSize = .sizeof(PaletteData)
 
+; VRAM transfer structures
 TextData:
 	vram_addr $2000, 6, 4
 	encode_string INC1, COPY, "FDS 40th Anniversary"

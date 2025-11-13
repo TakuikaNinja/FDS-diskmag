@@ -1,5 +1,8 @@
 ; constants
 
+; debug mode
+	DEBUG = 1
+
 ; buttons
 	P1_PRESSED    = Buttons
 	P1_HELD       = Buttons+2
