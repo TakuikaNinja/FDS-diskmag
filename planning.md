@@ -34,8 +34,8 @@ Sound driver: [Sabre](https://github.com/CutterCross/Sabre)
 
 - [x] Intro
 - [x] Reading (Force Bot proto theme 6)
-- [ ] Disk error SFX?
-
+- [x] Disk error SFX
+- others?
 
 ## Greets
 

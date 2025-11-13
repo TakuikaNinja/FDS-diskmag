@@ -1,7 +1,7 @@
 sabre_maxTracks:
 	.byte 2
 sabre_maxSFX:
-	.byte 0
+	.byte 1
 
 trackHeaderTable_lo:
 	.byte <_default_Intro_header
@@ -13,11 +13,15 @@ trackTable_PRGbank:
 	.byte $00,$00
 
 sfxHeaderTable_lo:
+	.byte <_sfx_Error_header
 sfxHeaderTable_hi:
+	.byte >_sfx_Error_header
 
 ;;;; Track index constants
 	_default_Intro   = 0
 	_default_Reading = 1
+;;;; SFX index constants
+	_sfx_Error = 0
 
 env0:
 	.byte 0,ENV_LOOP,0
@@ -38,19 +42,25 @@ env7:
 env8:
 	.byte 9,9,4,4,8,8,5,5,7,7,6,6,7,7,6,4,ENV_LOOP,15
 env9:
-	.byte 6,1,0,ENV_LOOP,2
+	.byte 12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,0,ENV_LOOP,18
 env10:
-	.byte 4,1,0,9,10,11,ENV_LOOP,5
+	.byte 6,1,0,ENV_LOOP,2
 env11:
-	.byte 12,0,ENV_LOOP,1
+	.byte 4,1,0,9,10,11,ENV_LOOP,5
 env12:
-	.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,255,1,1,1,1,255,255,ENV_LOOP,16
+	.byte 12,0,ENV_LOOP,1
 env13:
-	.byte 96,64,64,64,64,64,64,64,64,64,64,64,64,64,96,64,ENV_LOOP,15
+	.byte 0,6,ENV_LOOP,0
 env14:
-	.byte 64,64,64,32,ENV_LOOP,3
+	.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,255,1,1,1,1,255,255,ENV_LOOP,16
 env15:
+	.byte 96,64,64,64,64,64,64,64,64,64,64,64,64,64,96,64,ENV_LOOP,15
+env16:
+	.byte 64,64,64,32,ENV_LOOP,3
+env17:
 	.byte 96,0,ENV_LOOP,1
+env18:
+	.byte 32,ENV_LOOP,0
 
 instrumentHeaderTable:
 	.word inst_silent
@@ -62,6 +72,7 @@ instrumentHeaderTable:
 	.word inst_Pad
 	.word inst_Pluck
 	.word inst_Lead
+	.word inst_Error
 
 inst_silent:
 	.word env0
@@ -70,12 +81,12 @@ inst_silent:
 	.word env0
 inst_Kick:
 	.word env2
-	.word env9
+	.word env10
 	.word env0
 	.word env0
 inst_Snare:
 	.word env4
-	.word env10
+	.word env11
 	.word env0
 	.word env0
 inst_Hat:
@@ -90,24 +101,29 @@ inst_OpenHat:
 	.word env0
 inst_Tri:
 	.word env5
-	.word env11
+	.word env12
 	.word env0
 	.word env0
 inst_Pad:
 	.word env6
 	.word env0
 	.word env0
-	.word env13
+	.word env15
 inst_Pluck:
 	.word env7
-	.word env11
+	.word env12
 	.word env0
-	.word env14
+	.word env16
 inst_Lead:
 	.word env8
 	.word env0
-	.word env12
-	.word env15
+	.word env14
+	.word env17
+inst_Error:
+	.word env9
+	.word env13
+	.word env0
+	.word env18
 
 dpcm_sampleAddressTable:
 
@@ -126,4 +142,14 @@ dpcm_noteToSampleLength:
 	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
 	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
 	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+
+_sfx_Error_header:
+	.byte 8
+	.byte 150
+	.word NULL_pulse1
+	.word _sfx_Error_pulse2
+	.word NULL_triangle
+	.word NULL_noise
+_sfx_Error_pulse2:
+	.byte NL4,INST|CONT|9,D3,D3,D3,D3,D3,END_SFX
 

@@ -211,6 +211,14 @@ BGInit:
 
 ; Stay in this state forever
 DoNothing:
+		; SFX test
+		lda P1_PRESSED
+		and #BUTTON_A
+		beq :+
+		lda #_sfx_Error
+		sta currentSFX
+		jsr sabre_playSFX
+:
 		rts
 
 ; Palette data
