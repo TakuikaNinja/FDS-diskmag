@@ -200,7 +200,7 @@ BGInit:
 		inc NeedDraw
 		jsr WaitForNMI
 		jsr VRAMStructWrite
-	.addr TextData
+	.addr Menu
 		
 ;		lda #_default_Intro
 		lda #_default_Reading
@@ -232,13 +232,11 @@ DoNothing:
 .endproc
 PaletteDataSize = .sizeof(PaletteData)
 
-; VRAM transfer structures
-TextData:
-	vram_addr $2000, 6, 4
-	encode_string INC1, COPY, "FDS 40th Anniversary"
-	
-	encode_terminator
+; Articles
+.include "Articles/common.asm"
+.include "Articles/menu.asm"
 
+; Sound engine + data
 .include "SabreFiles/sabre.asm"
 .include "Music/fds_diskmag_static.asm"
 .include "Music/fds_diskmag_default.asm"

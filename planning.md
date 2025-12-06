@@ -8,6 +8,12 @@
 
 This is absolutely going to be shareware.
 
+## Requirements for disk loading
+
+- [ ] Disk files
+- [ ] Load routine launcher
+- [ ] Text compression/decompression scheme
+
 ## Articles/Features
 
 Do I want JP/ENG language selections, or separate builds?
@@ -27,6 +33,7 @@ Do I want JP/ENG language selections, or separate builds?
 - [ ] Text font
 - [ ] Article page layout
 - [ ] Intro screen + menu interface
+- [ ] Screen transitions (scroll, palette fade)
 
 ## Sound
 
