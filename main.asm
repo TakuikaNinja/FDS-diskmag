@@ -26,7 +26,6 @@ Reset:
 		bne @clrmem
 		
 		jsr MoveSpritesOffscreen
-		jsr InitNametables
 		
 		; set up custom IRQ handler
 		lda #<IRQHandler
@@ -185,6 +184,28 @@ WaitForNMI:
 		bne :-
 		rts
 
+; ArticleID = article to load
+LoadArticle:
+		lda ArticleID
+		asl a
+		tax
+		lda Articles,x
+		sta ArticleAddr
+		lda Articles+1,x
+		sta ArticleAddr+1
+		jsr DisableRendering
+		jsr WaitForNMI
+		jsr InitNametables
+		jsr VRAMStructWrite
+ArticleAddr:
+	.addr Menu
+		
+		inc NeedDraw
+		jmp EnableRendering
+
+Articles:
+	.addr Menu
+
 ; Jump table for main logic
 ProcessBGMode:
 		lda Mode
@@ -198,20 +219,23 @@ BGInit:
 		; palette data goes into vblank buffer to avoid visible stripes
 		vram_string $3f00, PaletteData, PaletteDataSize
 		inc NeedDraw
-		jsr WaitForNMI
-		jsr VRAMStructWrite
-	.addr Menu
+;		jsr WaitForNMI
+		jsr LoadArticle
 		
 ;		lda #_default_Intro
 		lda #_default_Reading
 		sta currentTrack
 		jsr sabre_playTrack
 		inc Mode
-		jmp EnableRendering								; remember to enable rendering for the next NMI
+		rts
 
 ; Stay in this state forever
 DoNothing:
-		; SFX test
+		jsr SFXTest
+		jsr HandleScroll
+		rts
+
+SFXTest:
 		lda P1_PRESSED
 		and #BUTTON_A
 		beq :+
@@ -219,6 +243,69 @@ DoNothing:
 		sta currentSFX
 		jsr sabre_playSFX
 :
+		rts
+
+HandleScroll:
+		lda P1_HELD
+		and #BUTTON_UP
+		beq :+
+		jsr SubYScroll
+:
+		lda P1_HELD
+		and #BUTTON_DOWN
+		beq :+
+		jsr AddYScroll
+:
+SetYScroll:
+		lda Y_Scroll
+		sta PPU_Y_SCROLL_MIRROR
+		lda Y_Scroll+1
+		asl a
+		sta temp
+		lda PPU_CTRL_MIRROR
+		and #%11111101
+		ora temp
+		sta PPU_CTRL_MIRROR
+		rts
+
+AddYScroll:
+		lda Y_Scroll
+		clc
+		adc #Y_SCROLL_SPEED
+		cmp #240
+		bcc :+
+		sbc #240 ; Guaranteed to set carry
+:
+		sta Y_Scroll
+		lda Y_Scroll+1
+		adc #0
+		cmp #1
+		bcc :+
+		lda #0
+		sta Y_Scroll
+		lda #1
+:
+		sta Y_Scroll+1
+		rts
+
+SubYScroll:
+		lda Y_Scroll
+		sec
+		sbc #Y_SCROLL_SPEED
+		bcs :+
+		sbc #15
+		clc
+:
+		sta temp
+		lda Y_Scroll+1
+		sbc #0
+		bcs :+
+		lda #$00
+		sta temp
+:
+		sta Y_Scroll+1
+		lda temp
+		sta Y_Scroll
 		rts
 
 ; Palette data

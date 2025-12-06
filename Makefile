@@ -24,7 +24,7 @@ zip.in: $(GAME).fds
 clean:
 	$(RM) *.o *.fds *.dbg *.nl *.map.txt *.labels.txt *.zip
 
-$(GAME).o: $(wildcard */*.asm) Jroatch-chr-sheet.chr
+$(GAME).o: $(wildcard *.asm) $(wildcard Articles/*.asm) $(wildcard Music/*.asm) $(wildcard SabreFiles/*.asm) Jroatch-chr-sheet.chr
 
 %.o:%.asm
 	$(ASSEMBLER) $< -g -o $@

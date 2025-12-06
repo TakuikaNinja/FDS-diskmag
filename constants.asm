@@ -31,3 +31,5 @@
 
 .include "SabreFiles/sabre_includes.asm"
 
+; general constants
+	Y_SCROLL_SPEED = 2

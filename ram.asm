@@ -7,6 +7,8 @@
 	NeedDraw: .res 1
 	NeedPPUMask: .res 1
 	Mode: .res 1
+	ArticleID: .res 1
+	Y_Scroll: .res 2
 	.include "SabreFiles/sabre_ZP_RAM.asm"
 
 ; BIOS zeropage variables
