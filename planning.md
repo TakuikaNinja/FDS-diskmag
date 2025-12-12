@@ -26,7 +26,7 @@ Do I want JP/ENG language selections, or separate builds?
 - [ ] Fukutake StudyBox?
 - [ ] Emulation & Homebrew Woes
 - [ ] FamiWiki?
-- [ ] Minigame?
+- [ ] SMB1 256W setup program
 
 ## Graphic Design
 

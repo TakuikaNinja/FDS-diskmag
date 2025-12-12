@@ -33,3 +33,11 @@
 
 ; general constants
 	Y_SCROLL_SPEED = 2
+
+; modes
+.enum MODE
+	INTRO
+	BG_INIT
+	READING
+.endenum
+

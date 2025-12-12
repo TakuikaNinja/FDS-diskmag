@@ -200,39 +200,89 @@ LoadArticle:
 ArticleAddr:
 	.addr Menu
 		
-		inc NeedDraw
 		jmp EnableRendering
 
 Articles:
 	.addr Menu
+	.addr SMB1
 
 ; Jump table for main logic
 ProcessBGMode:
 		lda Mode
 		jsr JumpEngine
+	.addr Intro
 	.addr BGInit
-	.addr DoNothing
+	.addr Reading
+
+Intro:
+		inc Mode
+		rts
 
 ; Initialise background to display the program name
 BGInit:
+		lda #_default_Reading
+		sta currentTrack
+		jsr sabre_playTrack
 		jsr DisableRendering
 		; palette data goes into vblank buffer to avoid visible stripes
 		vram_string $3f00, PaletteData, PaletteDataSize
 		inc NeedDraw
-;		jsr WaitForNMI
-		jsr LoadArticle
-		
-;		lda #_default_Intro
-		lda #_default_Reading
-		sta currentTrack
-		jsr sabre_playTrack
+		jsr LoadMenu
 		inc Mode
 		rts
 
-; Stay in this state forever
-DoNothing:
+ScrollLocks:
+	.byte 1, 1
+
+Reading:
+		jsr HandleExit
 		jsr SFXTest
+		ldx ArticleID
+		lda ScrollLocks,x								; does the current article have a scroll lock?
+		bne :+
 		jsr HandleScroll
+:
+
+; execute article-specific code, if any
+ArticleHandler:
+		lda ArticleID
+		jsr JumpEngine
+	.addr MenuUI										; (the menu is technically an article)
+	.addr SMB1_256W
+
+DoNothing:
+		rts
+
+MenuUI:
+		lda P1_PRESSED
+		and #(BUTTON_START | BUTTON_A)
+		beq :+
+		lda #$01
+		sta ArticleID
+		jsr LoadArticle
+:
+		rts
+
+; SMB1 256W setup
+SMB1_256W:
+		rts
+
+; Press B to return to menu
+HandleExit:
+		lda ArticleID									; already in menu? then don't exit
+		beq :+
+		lda P1_PRESSED
+		and #BUTTON_B
+		beq :+
+
+LoadMenu:		
+		lda #$00
+		sta ArticleID
+		sta Y_Scroll
+		sta Y_Scroll+1
+		jsr SetYScroll
+		jsr LoadArticle
+:
 		rts
 
 SFXTest:
@@ -322,6 +372,7 @@ PaletteDataSize = .sizeof(PaletteData)
 ; Articles
 .include "Articles/common.asm"
 .include "Articles/menu.asm"
+.include "Articles/smb1.asm"
 
 ; Sound engine + data
 .include "SabreFiles/sabre.asm"
