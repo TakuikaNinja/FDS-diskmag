@@ -11,6 +11,8 @@ SMB1:
 	encode_string INC1, COPY, "256W trick for SMB1 works"
 	vram_addr $2000, 3, 8
 	encode_string INC1, COPY, "on the FDS version, too?"
+	vram_addr $2000, 3, 9
+	encode_string INC1, COPY, "(Including Tonkachi Mario)"
 	
 	vram_addr $2000, 4, 12
 	encode_length INC1, COPY, 23
@@ -19,7 +21,15 @@ SMB1:
 	vram_addr $2000, 3, 13
 	encode_string INC1, COPY, "and press START to begin"
 	
+	vram_addr $2000, 10, 18
+	encode_string INC1, COPY, "World ="
+	
 	vram_addr $2000, 8, 26
 	encode_string INC1, COPY, "Press B to exit"
 	
 	encode_terminator
+	
+define_string WorldNumber, "00"
+	
+define_string SwapAndReset,  "Swap disk & press RESET now!"
+

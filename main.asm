@@ -184,6 +184,25 @@ WaitForNMI:
 		bne :-
 		rts
 
+NumToChars:												; converts A into hex chars and puts them in X/Y
+		pha
+		and #$0f
+		tay
+		lda NybbleToChar,y
+		tay
+		pla
+		lsr
+		lsr
+		lsr
+		lsr
+		tax
+		lda NybbleToChar,x
+		tax
+		rts
+
+NybbleToChar:
+	.byte "0123456789ABCDEF"
+
 ; ArticleID = article to load
 LoadArticle:
 		lda ArticleID
@@ -218,8 +237,10 @@ Intro:
 		inc Mode
 		rts
 
-; Initialise background to display the program name
+; Initialise background
 BGInit:
+		lda #$01										; default SMB1256W world number
+		sta World
 		lda #_default_Reading
 		sta currentTrack
 		jsr sabre_playTrack
@@ -236,7 +257,7 @@ ScrollLocks:
 
 Reading:
 		jsr HandleExit
-		jsr SFXTest
+;		jsr SFXTest
 		ldx ArticleID
 		lda ScrollLocks,x								; does the current article have a scroll lock?
 		bne :+
@@ -255,7 +276,7 @@ DoNothing:
 
 MenuUI:
 		lda P1_PRESSED
-		and #(BUTTON_START | BUTTON_A)
+		and #BUTTON_A
 		beq :+
 		lda #$01
 		sta ArticleID
@@ -265,7 +286,46 @@ MenuUI:
 
 ; SMB1 256W setup
 SMB1_256W:
+		lda P1_PRESSED
+		and #BUTTON_START
+		bne @Setup
+		lda P1_PRESSED
+		and #BUTTON_UP
+		beq :+
+		dec World
+:
+		lda P1_PRESSED
+		and #BUTTON_DOWN
+		beq :+
+		inc World
+:
+		lda World
+		jsr NumToChars
+		stx WorldNumber
+		sty WorldNumber+1
+		vram_string ($2000 + (18 << 5) + 18), WorldNumber, WorldNumberLength
+		inc NeedDraw
 		rts
+
+@Setup:
+		lda #$00
+		ldx #$d7
+@loop:
+		sta $0700,x
+		inx
+		bne @loop
+		ldx World
+		dex
+		stx $07fd
+		ldy #$a5
+		sty $07ff
+		sta RST_FLAG
+		sta RST_TYPE
+		vram_string ($2000 + (26 << 5) + 2), SwapAndReset, SwapAndResetLength
+		inc NeedDraw
+@idle:
+		jsr WaitForNMI
+		beq @idle
 
 ; Press B to return to menu
 HandleExit:
