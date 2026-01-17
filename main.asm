@@ -223,7 +223,17 @@ ArticleAddr:
 
 Articles:
 	.addr Menu
+	.addr NoArticle
+	.addr NoArticle
+	.addr NoArticle
+	.addr NoArticle
+	.addr NoArticle
 	.addr SMB1
+	.addr Credits
+
+NoArticle:
+	encode_call Common
+	encode_terminator
 
 ; Jump table for main logic
 ProcessBGMode:
@@ -253,7 +263,7 @@ BGInit:
 		rts
 
 ScrollLocks:
-	.byte 1, 1
+	.byte 1,0,0,0,0,0,1,1
 
 Reading:
 		jsr HandleExit
@@ -269,7 +279,13 @@ ArticleHandler:
 		lda ArticleID
 		jsr JumpEngine
 	.addr MenuUI										; (the menu is technically an article)
+	.addr DoNothing
+	.addr DoNothing
+	.addr DoNothing
+	.addr DoNothing
+	.addr DoNothing
 	.addr SMB1_256W
+	.addr DoNothing
 
 DoNothing:
 		rts
@@ -278,7 +294,7 @@ MenuUI:
 		lda P1_PRESSED
 		and #BUTTON_A
 		beq :+
-		lda #$01
+		lda #$07
 		sta ArticleID
 		jsr LoadArticle
 :
@@ -321,7 +337,8 @@ SMB1_256W:
 		sty $07ff
 		sta RST_FLAG
 		sta RST_TYPE
-		vram_string ($2000 + (26 << 5) + 2), SwapAndReset, SwapAndResetLength
+		vram_string ($2000 + (25 << 5) + 2), SwapAndReset, 29
+		vram_string ($2000 + (26 << 5) + 2), SwapAndReset+29, SwapAndResetLength-29
 		inc NeedDraw
 @idle:
 		jsr WaitForNMI
@@ -433,6 +450,7 @@ PaletteDataSize = .sizeof(PaletteData)
 .include "Articles/common.asm"
 .include "Articles/menu.asm"
 .include "Articles/smb1.asm"
+.include "Articles/credits.asm"
 
 ; Sound engine + data
 .include "SabreFiles/sabre.asm"

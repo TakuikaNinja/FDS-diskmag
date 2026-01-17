@@ -24,12 +24,12 @@ SMB1:
 	vram_addr $2000, 10, 18
 	encode_string INC1, COPY, "World ="
 	
-	vram_addr $2000, 8, 26
+	vram_addr $2000, 8, 25
 	encode_string INC1, COPY, "Press B to exit"
 	
 	encode_terminator
 	
 define_string WorldNumber, "00"
 	
-define_string SwapAndReset,  "Swap disk & press RESET now!"
+define_string SwapAndReset,  "Swap disk, press RESET, then do the usual A+START combo!"
 

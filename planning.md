@@ -19,21 +19,22 @@ This is absolutely going to be shareware.
 Do I want JP/ENG language selections, or separate builds?
 
 - [x] Fake license screen
-- [ ] FDSKey
-- [ ] Namco IPL
+- [ ] FDS R&D? In 2026?
 - [ ] Disk BASIC (thx InfiniteEnd)
+- [ ] Namco IPL
 - [ ] I2 Souseiki Fammy (thx Zorchenhimer!!)
 - [ ] Fukutake StudyBox?
-- [ ] Emulation & Homebrew Woes
 - [ ] FamiWiki?
 - [x] SMB1 256W setup program
+- [ ] Credits & Greets
 
 ## Graphic Design
 
 - [ ] Text font
 - [ ] Article page layout
-- [ ] Intro screen + menu interface
-- [ ] Screen transitions (scroll, palette fade)
+- [ ] Intro screen
+- [ ] Menu interface
+- [ ] Screen transitions? (scroll, palette fade)
 
 ## Sound
 
