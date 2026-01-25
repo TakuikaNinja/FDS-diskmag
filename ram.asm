@@ -8,6 +8,7 @@
 	NeedPPUMask: .res 1
 	Mode: .res 1
 	ArticleID: .res 1
+	MenuIdx: .res 1
 	Y_Scroll: .res 2
 	World: .res 1
 	.include "SabreFiles/sabre_ZP_RAM.asm"

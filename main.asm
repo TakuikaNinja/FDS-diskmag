@@ -17,6 +17,7 @@ Reset:
 		sta $0100,x
 :
 		sta $0200,x
+		dec $0200,x
 		sta $0300,x
 		sta $0400,x
 		sta $0500,x
@@ -25,7 +26,7 @@ Reset:
 		inx
 		bne @clrmem
 		
-		jsr MoveSpritesOffscreen
+;		jsr MoveSpritesOffscreen
 		
 		; set up custom IRQ handler
 		lda #<IRQHandler
@@ -155,9 +156,15 @@ UpdatePPUMask:
 
 MoveSpritesOffscreen:
 		lda #$ff										; fill OAM buffer with $ff to move offscreen
-		ldx #>oam
-		ldy #>oam
-		jmp MemFill
+		ldy #$00
+@loop:
+		sta oam,y
+		iny
+		iny
+		iny
+		iny
+		bne @loop
+		rts
 
 InitNametables:
 		lda #$20										; top-left
@@ -212,6 +219,7 @@ LoadArticle:
 		sta ArticleAddr
 		lda Articles+1,x
 		sta ArticleAddr+1
+		jsr MoveSpritesOffscreen
 		jsr DisableRendering
 		jsr WaitForNMI
 		jsr InitNametables
@@ -291,13 +299,45 @@ DoNothing:
 		rts
 
 MenuUI:
+		ldx MenuIdx
 		lda P1_PRESSED
 		and #BUTTON_A
 		beq :+
-		lda #$07
-		sta ArticleID
-		jsr LoadArticle
+		inx
+		stx ArticleID									; +1 to skip menu
+		jmp LoadArticle
 :
+		lda P1_PRESSED
+		and #BUTTON_DOWN
+		beq :+
+		cpx #7-1
+		bcs :+
+		inx
+:
+		lda P1_PRESSED
+		and #BUTTON_UP
+		beq :+
+		cpx #0
+		beq :+
+		dex
+:
+		stx MenuIdx
+;		jmp CursorSprite
+
+CursorSprite:
+		lda MenuIdx
+		asl a
+		asl a
+		asl a
+		asl a
+		adc #63
+		sta oam+0										; (ArticleID) * 16 + 63
+		lda #$1f
+		sta oam+1
+		lda #$00
+		sta oam+2
+		lda #52
+		sta oam+3
 		rts
 
 ; SMB1 256W setup
