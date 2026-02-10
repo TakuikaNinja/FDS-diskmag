@@ -22,11 +22,10 @@ Do I want JP/ENG language selections, or separate builds?
 - [ ] FDS R&D? In 2026?
 - [ ] Disk BASIC (thx InfiniteEnd)
 - [ ] Namco IPL
-- [ ] I2 Souseiki Fammy (thx Zorchenhimer!!)
-- [ ] Fukutake StudyBox?
-- [ ] FamiWiki?
+- [x] I2 Souseiki Fammy (thx Zorchenhimer!!)
+- [ ] Review: Ravi and Navi
 - [x] SMB1 256W setup program
-- [ ] Credits & Greets
+- [x] Credits & Greets
 
 ## Graphic Design
 

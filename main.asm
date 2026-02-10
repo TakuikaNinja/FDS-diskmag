@@ -234,7 +234,7 @@ Articles:
 	.addr NoArticle
 	.addr NoArticle
 	.addr NoArticle
-	.addr NoArticle
+	.addr Fammy
 	.addr NoArticle
 	.addr SMB1
 	.addr Credits
@@ -266,12 +266,19 @@ BGInit:
 		; palette data goes into vblank buffer to avoid visible stripes
 		vram_string $3f00, PaletteData, PaletteDataSize
 		inc NeedDraw
+	.ifdef DEBUG
+		jsr sabre_stopTrack
+		lda #$04
+		sta ArticleID
+		jsr LoadArticle
+	.elseif
 		jsr LoadMenu
+	.endif
 		inc Mode
 		rts
 
 ScrollLocks:
-	.byte 1,0,0,0,0,0,1,1
+	.byte 1,0,0,0,1,0,1,1
 
 Reading:
 		jsr HandleExit
@@ -298,6 +305,7 @@ ArticleHandler:
 DoNothing:
 		rts
 
+; Move a cursor sprite and check if an article was selected
 MenuUI:
 		ldx MenuIdx
 		lda P1_PRESSED
@@ -331,7 +339,7 @@ CursorSprite:
 		asl a
 		asl a
 		adc #63
-		sta oam+0										; (ArticleID) * 16 + 63
+		sta oam+0										; ArticleID * 16 + 63
 		lda #$1f
 		sta oam+1
 		lda #$00
@@ -386,13 +394,17 @@ SMB1_256W:
 
 ; Press B to return to menu
 HandleExit:
-		lda ArticleID									; already in menu? then don't exit
-		beq :+
 		lda P1_PRESSED
 		and #BUTTON_B
 		beq :+
-
-LoadMenu:		
+		
+		lda ArticleID									; already in menu? then go to intro instead
+		bne LoadMenu
+		
+		sta Mode										; A is already 0
+		rts
+		
+LoadMenu:
 		lda #$00
 		sta ArticleID
 		sta Y_Scroll
@@ -489,6 +501,7 @@ PaletteDataSize = .sizeof(PaletteData)
 ; Articles
 .include "Articles/common.asm"
 .include "Articles/menu.asm"
+.include "Articles/fammy.asm"
 .include "Articles/smb1.asm"
 .include "Articles/credits.asm"
 

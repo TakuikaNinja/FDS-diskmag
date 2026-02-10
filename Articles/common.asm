@@ -56,3 +56,13 @@ Attributes:
 	.byte $00
 	encode_return
 
+; for single-screen articles
+BottomEdge:
+	vram_addr $2000, 1, 28
+	encode_length INC1, FILL, 30
+	.byte $0f
+	vram_addr $2000, 1, 29
+	encode_length INC1, FILL, 30
+	.byte $0d
+	encode_return
+

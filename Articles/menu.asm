@@ -18,7 +18,7 @@ Menu:
 	encode_string INC1, COPY, "I2 Souseiki Fammy"
 	
 	vram_addr $2000, 8, 16
-	encode_string INC1, COPY, "?"
+	encode_string INC1, COPY, "Review: Ravi and Navi"
 	
 	vram_addr $2000, 8, 18
 	encode_string INC1, COPY, "SMB1 256W on FDS"

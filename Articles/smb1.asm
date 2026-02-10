@@ -1,7 +1,6 @@
 ; SMB1 256W setup screen
 
 SMB1:
-;	encode_call Common
 	vram_addr $2000, 8, 4
 	encode_string INC1, COPY, "SMB1 256W on FDS"
 	
@@ -27,6 +26,8 @@ SMB1:
 	vram_addr $2000, 8, 25
 	encode_string INC1, COPY, "Press B to exit"
 	
+	encode_call Common
+	encode_call BottomEdge
 	encode_terminator
 	
 define_string WorldNumber, "00"
