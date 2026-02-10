@@ -30,6 +30,9 @@ EdgePatterns:
 	encode_length INC32, FILL, 30
 	.byte $0d
 
+	vram_addr $2800, 8, 26
+	encode_string INC1, COPY, "Press B to exit"
+
 ; top/bottom
 	vram_addr $2000, 1, 0
 	encode_length INC1, FILL, 30
@@ -56,8 +59,22 @@ Attributes:
 	.byte $00
 	encode_return
 
+; for dual-screen articles
+Arrows:
+	vram_addr $2000, 29, 27
+	encode_length INC1, COPY, 1
+	.byte $1d
+	vram_addr $2800, 2, 2
+	encode_length INC1, COPY, 1
+	.byte $1c
+	encode_return
+
 ; for single-screen articles
 BottomEdge:
+
+	vram_addr $2000, 8, 26
+	encode_string INC1, COPY, "Press B to exit"
+
 	vram_addr $2000, 1, 28
 	encode_length INC1, FILL, 30
 	.byte $0f

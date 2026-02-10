@@ -46,9 +46,7 @@ Fammy:
 	vram_addr $2000, 4, 24
 	encode_string INC1, COPY, "(May add extra 4KiB RAM)"
 	
-	vram_addr $2000, 8, 26
-	encode_string INC1, COPY, "Press B to exit"
-	
 	encode_call Common
 	encode_call BottomEdge
 	encode_terminator
+

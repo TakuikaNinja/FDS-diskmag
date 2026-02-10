@@ -20,11 +20,8 @@ SMB1:
 	vram_addr $2000, 3, 13
 	encode_string INC1, COPY, "and press START to begin"
 	
-	vram_addr $2000, 10, 18
+	vram_addr $2000, 10, 19
 	encode_string INC1, COPY, "World ="
-	
-	vram_addr $2000, 8, 25
-	encode_string INC1, COPY, "Press B to exit"
 	
 	encode_call Common
 	encode_call BottomEdge
@@ -32,5 +29,5 @@ SMB1:
 	
 define_string WorldNumber, "00"
 	
-define_string SwapAndReset,  "Swap disk, press RESET, then do the usual A+START combo!"
+define_string SwapAndReset,  "Swap disk, RESET, A+START!"
 

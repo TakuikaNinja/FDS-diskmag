@@ -21,7 +21,7 @@ Do I want JP/ENG language selections, or separate builds?
 - [x] Fake license screen
 - [ ] FDS R&D? In 2026?
 - [ ] Disk BASIC (thx InfiniteEnd)
-- [ ] Namco IPL
+- [x] Namco IPL
 - [x] I2 Souseiki Fammy (thx Zorchenhimer!!)
 - [ ] Review: Ravi and Navi
 - [x] SMB1 256W setup program

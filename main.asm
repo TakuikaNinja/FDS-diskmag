@@ -61,6 +61,9 @@ NonMaskableInterrupt:
 		tya
 		pha
 		
+		bit NMISoftDisable								; if NMIs are soft-disabled,
+		bmi SkipScroll									; skip scroll setting to avoid clobbering PPU registers
+		
 		lda NMIReady									; check if ready to do NMI logic (i.e. not a lag frame)
 		beq NotReady
 		
@@ -86,6 +89,8 @@ NonMaskableInterrupt:
 
 NotReady:
 		jsr SetScroll									; remember to set scroll on lag frames
+		
+SkipScroll:
 		jsr sabre_soundUpdate
 		
 		pla												; restore X/Y/A
@@ -222,18 +227,20 @@ LoadArticle:
 		jsr MoveSpritesOffscreen
 		jsr DisableRendering
 		jsr WaitForNMI
+		lda #$80										; upcoming bulk writes can take longer than 1 frame,
+		sta NMISoftDisable								; so soft-disable NMIs to avoid race conditions
 		jsr InitNametables
 		jsr VRAMStructWrite
 ArticleAddr:
 	.addr Menu
-		
+		rol NMISoftDisable								; soft-enable NMIs once done
 		jmp EnableRendering
 
 Articles:
 	.addr Menu
 	.addr NoArticle
 	.addr NoArticle
-	.addr NoArticle
+	.addr NamcoIPL
 	.addr Fammy
 	.addr NoArticle
 	.addr SMB1
@@ -268,7 +275,7 @@ BGInit:
 		inc NeedDraw
 	.ifdef DEBUG
 		jsr sabre_stopTrack
-		lda #$04
+		lda #$03
 		sta ArticleID
 		jsr LoadArticle
 	.elseif
@@ -367,7 +374,7 @@ SMB1_256W:
 		jsr NumToChars
 		stx WorldNumber
 		sty WorldNumber+1
-		vram_string ($2000 + (18 << 5) + 18), WorldNumber, WorldNumberLength
+		vram_string ($2000 + (19 << 5) + 18), WorldNumber, WorldNumberLength
 		inc NeedDraw
 		rts
 
@@ -385,8 +392,7 @@ SMB1_256W:
 		sty $07ff
 		sta RST_FLAG
 		sta RST_TYPE
-		vram_string ($2000 + (25 << 5) + 2), SwapAndReset, 29
-		vram_string ($2000 + (26 << 5) + 2), SwapAndReset+29, SwapAndResetLength-29
+		vram_string ($2000 + (26 << 5) + 3), SwapAndReset, SwapAndResetLength
 		inc NeedDraw
 @idle:
 		jsr WaitForNMI
@@ -501,6 +507,7 @@ PaletteDataSize = .sizeof(PaletteData)
 ; Articles
 .include "Articles/common.asm"
 .include "Articles/menu.asm"
+.include "Articles/namco_ipl.asm"
 .include "Articles/fammy.asm"
 .include "Articles/smb1.asm"
 .include "Articles/credits.asm"
