@@ -20,7 +20,7 @@ Do I want JP/ENG language selections, or separate builds?
 
 - [x] Fake license screen
 - [ ] FDS R&D? In 2026?
-- [ ] Disk BASIC (thx InfiniteEnd)
+- [x] Disk BASIC (thx InfiniteEnd)
 - [x] Namco IPL
 - [x] I2 Souseiki Fammy (thx Zorchenhimer!!)
 - [ ] Review: Ravi and Navi

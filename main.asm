@@ -233,13 +233,13 @@ LoadArticle:
 		jsr VRAMStructWrite
 ArticleAddr:
 	.addr Menu
-		rol NMISoftDisable								; soft-enable NMIs once done
+		asl NMISoftDisable								; soft-enable NMIs once done
 		jmp EnableRendering
 
 Articles:
 	.addr Menu
 	.addr NoArticle
-	.addr NoArticle
+	.addr DiskBASIC
 	.addr NamcoIPL
 	.addr Fammy
 	.addr NoArticle
@@ -275,7 +275,7 @@ BGInit:
 		inc NeedDraw
 	.ifdef DEBUG
 		jsr sabre_stopTrack
-		lda #$03
+		lda #$02
 		sta ArticleID
 		jsr LoadArticle
 	.elseif
@@ -507,6 +507,7 @@ PaletteDataSize = .sizeof(PaletteData)
 ; Articles
 .include "Articles/common.asm"
 .include "Articles/menu.asm"
+.include "Articles/disk_basic.asm"
 .include "Articles/namco_ipl.asm"
 .include "Articles/fammy.asm"
 .include "Articles/smb1.asm"
