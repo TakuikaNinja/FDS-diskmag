@@ -19,7 +19,7 @@ This is absolutely going to be shareware.
 Do I want JP/ENG language selections, or separate builds?
 
 - [x] Fake license screen
-- [ ] FDS R&D? In 2026?
+- [x] FDS R&D? In 2026?
 - [x] Disk BASIC (thx InfiniteEnd)
 - [x] Namco IPL
 - [x] I2 Souseiki Fammy (thx Zorchenhimer!!)

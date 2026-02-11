@@ -238,7 +238,7 @@ ArticleAddr:
 
 Articles:
 	.addr Menu
-	.addr NoArticle
+	.addr Research
 	.addr DiskBASIC
 	.addr NamcoIPL
 	.addr Fammy
@@ -275,7 +275,7 @@ BGInit:
 		inc NeedDraw
 	.ifdef DEBUG
 		jsr sabre_stopTrack
-		lda #$05
+		lda #$01
 		sta ArticleID
 		jsr LoadArticle
 	.elseif
@@ -507,6 +507,7 @@ PaletteDataSize = .sizeof(PaletteData)
 ; Articles
 .include "Articles/common.asm"
 .include "Articles/menu.asm"
+.include "Articles/research.asm"
 .include "Articles/disk_basic.asm"
 .include "Articles/namco_ipl.asm"
 .include "Articles/fammy.asm"
