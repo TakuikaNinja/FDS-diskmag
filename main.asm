@@ -242,7 +242,7 @@ Articles:
 	.addr DiskBASIC
 	.addr NamcoIPL
 	.addr Fammy
-	.addr NoArticle
+	.addr RaviAndNavi
 	.addr SMB1
 	.addr Credits
 
@@ -275,7 +275,7 @@ BGInit:
 		inc NeedDraw
 	.ifdef DEBUG
 		jsr sabre_stopTrack
-		lda #$02
+		lda #$05
 		sta ArticleID
 		jsr LoadArticle
 	.elseif
@@ -510,6 +510,7 @@ PaletteDataSize = .sizeof(PaletteData)
 .include "Articles/disk_basic.asm"
 .include "Articles/namco_ipl.asm"
 .include "Articles/fammy.asm"
+.include "Articles/ravi_and_navi.asm"
 .include "Articles/smb1.asm"
 .include "Articles/credits.asm"
 

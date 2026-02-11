@@ -23,7 +23,7 @@ Do I want JP/ENG language selections, or separate builds?
 - [x] Disk BASIC (thx InfiniteEnd)
 - [x] Namco IPL
 - [x] I2 Souseiki Fammy (thx Zorchenhimer!!)
-- [ ] Review: Ravi and Navi
+- [x] Review: Ravi and Navi
 - [x] SMB1 256W setup program
 - [x] Credits & Greets
 
