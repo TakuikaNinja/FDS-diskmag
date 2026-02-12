@@ -36,10 +36,6 @@
 ; general constants
 	Y_SCROLL_SPEED = 2
 
-; modes
-.enum MODE
-	INTRO
-	BG_INIT
-	READING
-.endenum
+	DAS_DELAY = 10
+	DAS_RESET = 15
 

@@ -11,6 +11,7 @@
 	ArticleID: .res 1
 	MenuIdx: .res 1
 	Y_Scroll: .res 2
+	AutoRepeat: .res 1
 	World: .res 1
 	.include "SabreFiles/sabre_ZP_RAM.asm"
 

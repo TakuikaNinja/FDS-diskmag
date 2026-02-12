@@ -275,7 +275,7 @@ BGInit:
 		inc NeedDraw
 	.if DEBUG = 1
 		jsr sabre_stopTrack
-		lda #$01
+		lda #$06
 		sta ArticleID
 		jsr LoadArticle
 	.else
@@ -360,16 +360,44 @@ SMB1_256W:
 		lda P1_PRESSED
 		and #BUTTON_START
 		bne @Setup
+		
 		lda P1_PRESSED
+		and #BUTTON_UP+BUTTON_DOWN
+		beq :+
+		
+		lda #$00
+		sta AutoRepeat
+		lda P1_HELD
+		and #BUTTON_UP+BUTTON_DOWN
+		cmp #BUTTON_UP+BUTTON_DOWN
+        bne @checkButtons
+:
+		lda P1_HELD
+		and #BUTTON_UP+BUTTON_DOWN
+		beq @ret
+		cmp #BUTTON_UP+BUTTON_DOWN
+        beq @ret
+		
+		inc AutoRepeat
+		lda AutoRepeat
+		cmp #DAS_RESET
+		bcc @ret
+		
+		lda #DAS_DELAY
+		sta AutoRepeat
+		
+@checkButtons:
+		lda P1_HELD
 		and #BUTTON_UP
 		beq :+
 		dec World
 :
-		lda P1_PRESSED
+		lda P1_HELD
 		and #BUTTON_DOWN
 		beq :+
 		inc World
 :
+@ret:
 		lda World
 		jsr NumToChars
 		stx WorldNumber
