@@ -17,10 +17,10 @@
 ; so feel free to skip the whole thing with a soft-reset.
 
 ; Set the following flag to 0 to skip the message:
-.ifdef DEBUG
-SHOW_MESSAGE = 0
+.if DEBUG = 1
+	SHOW_MESSAGE = 0
 .else
-SHOW_MESSAGE = 1
+	SHOW_MESSAGE = 1
 .endif
 
 Bypass:

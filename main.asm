@@ -122,7 +122,7 @@ IRQHandler:
 		jmp @Exit
   
 @Watchdog:
-	.ifdef DEBUG
+	.if DEBUG = 1
 		ldx PPU_MASK_MIRROR
 		txa
 		inx ; set grayscale for visual feedback on hardware
@@ -273,12 +273,12 @@ BGInit:
 		; palette data goes into vblank buffer to avoid visible stripes
 		vram_string $3f00, PaletteData, PaletteDataSize
 		inc NeedDraw
-	.ifdef DEBUG
+	.if DEBUG = 1
 		jsr sabre_stopTrack
 		lda #$01
 		sta ArticleID
 		jsr LoadArticle
-	.elseif
+	.else
 		jsr LoadMenu
 	.endif
 		inc Mode

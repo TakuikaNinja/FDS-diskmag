@@ -3,6 +3,13 @@ ZIP_NAME=FDS-Diskmag
 ASSEMBLER=ca65
 LINKER=ld65
 
+CAFLAGS = -g
+
+DEBUG=0 # Will be overriden by variable set in `make` command line
+ifeq ($(DEBUG),1)
+CAFLAGS += -D DEBUG=1
+endif
+
 OBJ_FILES=$(GAME).o
 
 all: $(GAME).fds
@@ -27,4 +34,4 @@ clean:
 $(GAME).o: $(wildcard *.asm) $(wildcard Articles/*.asm) $(wildcard Music/*.asm) $(wildcard SabreFiles/*.asm) Jroatch-chr-sheet.chr
 
 %.o:%.asm
-	$(ASSEMBLER) $< -g -o $@
+	$(ASSEMBLER) $(CAFLAGS) $< -o $@

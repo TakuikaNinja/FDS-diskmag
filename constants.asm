@@ -1,7 +1,9 @@
 ; constants
 
 ; debug mode
-	DEBUG = 1
+.ifndef DEBUG
+	DEBUG = 0
+.endif
 
 ; buttons
 	P1_PRESSED    = Buttons
