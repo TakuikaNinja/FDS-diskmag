@@ -43,7 +43,7 @@ RaviAndNavi:
 	encode_string INC1, COPY, "custom sleeves/inlays."
 	
 	vram_addr $2000, 3, 26
-	encode_string INC1, COPY, "(continued below)"
+	encode_string INC1, COPY, "(Continued below)"
 	
 	vram_addr $2800, 4, 4
 	encode_string INC1, COPY, "TakuikaNinja's Thoughts:"

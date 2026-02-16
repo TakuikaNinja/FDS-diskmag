@@ -5,27 +5,29 @@ Credits:
 	vram_addr $2000, 12, 4
 	encode_string INC1, COPY, "Credits:"
 	
-	vram_addr $2000, 4, 7
+	vram_addr $2000, 4, 6
 	encode_string INC1, COPY, "Diskmag by TakuikaNinja"
-	vram_addr $2000, 4, 9
+	vram_addr $2000, 4, 8
 	encode_string INC1, COPY, "Sabre sound driver by"
-	vram_addr $2000, 10, 10
+	vram_addr $2000, 10, 9
 	encode_string INC1, COPY, "CutterCross"
 	
-	vram_addr $2000, 4, 12
+	vram_addr $2000, 4, 11
 	encode_string INC1, COPY, "Placeholder GFX by"
-	vram_addr $2000, 10, 13
-	encode_string INC1, COPY, "Drag, shiru, & Sik"
+	vram_addr $2000, 4, 12
+	encode_string INC1, COPY, "JRoatch, Drag, shiru, Sik"
 	
 	
-	vram_addr $2000, 11, 15
+	vram_addr $2000, 11, 14
 	encode_string INC1, COPY, "Greets to:"
-	vram_addr $2000, 8, 16
-	encode_length INC32, FILL, 8
+	vram_addr $2000, 8, 15
+	encode_length INC32, FILL, 9
 	.byte $16
 	
-	vram_addr $2000, 10, 16
+	vram_addr $2000, 10, 15
 	encode_string INC1, COPY, "Chiptune Cafe"
+	vram_addr $2000, 10, 16
+	encode_string INC1, COPY, "Hidden Palace"
 	vram_addr $2000, 10, 17
 	encode_string INC1, COPY, "FamiWiki"
 	vram_addr $2000, 10, 18

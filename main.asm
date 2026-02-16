@@ -242,6 +242,7 @@ Articles:
 	.addr DiskBASIC
 	.addr NamcoIPL
 	.addr Fammy
+	.addr BBL
 	.addr RaviAndNavi
 	.addr SMB1
 	.addr Credits
@@ -275,7 +276,7 @@ BGInit:
 		inc NeedDraw
 	.if DEBUG = 1
 		jsr sabre_stopTrack
-		lda #$06
+		lda #DEBUG_ARTICLE
 		sta ArticleID
 		jsr LoadArticle
 	.else
@@ -285,7 +286,7 @@ BGInit:
 		rts
 
 ScrollLocks:
-	.byte 1,0,0,0,1,0,1,1
+	.byte 1,0,0,0,1,1,0,1,1
 
 Reading:
 		jsr HandleExit
@@ -301,6 +302,7 @@ ArticleHandler:
 		lda ArticleID
 		jsr JumpEngine
 	.addr MenuUI										; (the menu is technically an article)
+	.addr DoNothing
 	.addr DoNothing
 	.addr DoNothing
 	.addr DoNothing
@@ -325,7 +327,7 @@ MenuUI:
 		lda P1_PRESSED
 		and #BUTTON_DOWN
 		beq :+
-		cpx #7-1
+		cpx #8-1
 		bcs :+
 		inx
 :
@@ -539,6 +541,7 @@ PaletteDataSize = .sizeof(PaletteData)
 .include "Articles/disk_basic.asm"
 .include "Articles/namco_ipl.asm"
 .include "Articles/fammy.asm"
+.include "Articles/bbl.asm"
 .include "Articles/ravi_and_navi.asm"
 .include "Articles/smb1.asm"
 .include "Articles/credits.asm"

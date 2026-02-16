@@ -4,6 +4,7 @@
 .ifndef DEBUG
 	DEBUG = 0
 .endif
+DEBUG_ARTICLE = 5
 
 ; buttons
 	P1_PRESSED    = Buttons

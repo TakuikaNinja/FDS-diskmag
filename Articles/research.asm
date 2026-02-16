@@ -46,36 +46,36 @@ Research:
 	encode_string INC1, COPY, "NewRisingSun to get here."
 	
 	vram_addr $2000, 3, 26
-	encode_string INC1, COPY, "(continued below)"
+	encode_string INC1, COPY, "(Continued below)"
 	
 	vram_addr $2800, 4, 4
 	encode_string INC1, COPY, "I've gotten quite lonely"
 	vram_addr $2800, 3, 5
 	encode_string INC1, COPY, "writing tests for the FDS."
 	vram_addr $2800, 3, 6
-	encode_string INC1, COPY, "Fiskbit, forple, lidnariq,"
+	encode_string INC1, COPY, "Many NESdev folk have had"
 	vram_addr $2800, 3, 7
-	encode_string INC1, COPY, "and other NESdev folk have"
+	encode_string INC1, COPY, "to endure my rambles on"
 	vram_addr $2800, 3, 8
-	encode_string INC1, COPY, "had to endure my Discord"
+	encode_string INC1, COPY, "Discord for over a year"
 	vram_addr $2800, 3, 9
-	encode_string INC1, COPY, "rambles for over a year"
-	vram_addr $2800, 3, 10
-	encode_string INC1, COPY, "at this point. (PLS help)"
+	encode_string INC1, COPY, "at this point. (Sorry)"
 	
-	vram_addr $2800, 4, 12
+	vram_addr $2800, 4, 11
 	encode_string INC1, COPY, "I've said it before and"
-	vram_addr $2800, 3, 13
+	vram_addr $2800, 3, 12
 	encode_string INC1, COPY, "I'll probably repeat it"
-	vram_addr $2800, 3, 14
+	vram_addr $2800, 3, 13
 	encode_string INC1, COPY, "again and again:"
 	
-	vram_addr $2800, 4, 16
-	encode_string INC1, COPY, "It's 2026 & FDS emulation"
+	vram_addr $2800, 4, 15
+	encode_string INC1, COPY, "FDS emulation still isn't"
+	vram_addr $2800, 3, 16
+	encode_string INC1, COPY, "good enough beyond all the"
 	vram_addr $2800, 3, 17
-	encode_string INC1, COPY, "still isn't good enough"
+	encode_string INC1, COPY, "popular licensed disks..."
 	vram_addr $2800, 3, 18
-	encode_string INC1, COPY, "beyond licensed disks..."
+	encode_string INC1, COPY, "(Drive emulators included)"
 	
 	vram_addr $2800, 6, 22
 	encode_string INC1, COPY, "Good luck, emu devs!"
