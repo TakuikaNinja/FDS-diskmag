@@ -7,6 +7,9 @@
 	NMIReady: .res 1
 	NeedDraw: .res 1
 	NeedPPUMask: .res 1
+	Frames: .res 1
+	SpriteIdx: .res 1
+	SpriteXPos: .res 1
 	Mode: .res 1
 	ArticleID: .res 1
 	MenuIdx: .res 1

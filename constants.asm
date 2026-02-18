@@ -4,7 +4,7 @@
 .ifndef DEBUG
 	DEBUG = 0
 .endif
-DEBUG_ARTICLE = 0
+	DEBUG_ARTICLE = 0
 
 ; buttons
 	P1_PRESSED    = Buttons
@@ -31,6 +31,12 @@ DEBUG_ARTICLE = 0
 	; max VRAM buffer size ($0302~$03ff)
 	BUFFER_SIZE = $fd
 .endenum
+
+; OAM
+	OAM_YPOS = oam+0
+	OAM_TILE = oam+1
+	OAM_ATTR = oam+2
+	OAM_XPOS = oam+3
 
 .include "SabreFiles/sabre_includes.asm"
 

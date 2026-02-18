@@ -93,6 +93,8 @@ NotReady:
 SkipScroll:
 		jsr sabre_soundUpdate
 		
+		inc Frames
+		
 		pla												; restore X/Y/A
 		tay
 		pla
@@ -294,21 +296,65 @@ Intro:
 		rts
 
 IntroSprites:
-		ldx #0
+		lda #$00
+		sta SpriteIdx
+;		jsr HatSprites
+
+; Flashing "Push ST" prompt
+PromptSprites:
+		ldx SpriteIdx
 		ldy #0
-		jsr IntroSprite
-		ldx #4
+		lda #176
+		sta SpriteXPos
+		
+@loop:
+		lda Frames
+		and #%00100000									; toggle every 64 frames
+		beq :+
+		lda #$FF
+	.byte $2c											; [skip 2 bytes]
+:
+		lda #95
+		sta OAM_YPOS,x
+		lda PushST,y
+		sta OAM_TILE,x
+		lda #0
+		sta OAM_ATTR,x
+		lda SpriteXPos
+		sta OAM_XPOS,x
+		clc
+		adc #8
+		sta SpriteXPos
+		txa
+		adc #4
+		tax
+		iny
+		cpy #PromptLength
+		bcc @loop
+		stx SpriteIdx
+;		rts
+
+; Extra sprites to complete the party hat pattern
+HatSprites:
+		ldx SpriteIdx
+		ldy #0
+		jsr HatSprite
 		iny
 		
-IntroSprite:
+HatSprite:
 		lda YPos,y
-		sta oam+0,x
+		sta OAM_YPOS,x
 		lda #$0e
-		sta oam+1,x
+		sta OAM_TILE,x
 		lda #$03
-		sta oam+2,x
+		sta OAM_ATTR,x
 		lda XPos,y
-		sta oam+3,x
+		sta OAM_XPOS,x
+		txa
+		clc
+		adc #4
+		sta SpriteIdx
+		tax
 		rts
 
 YPos:
@@ -316,6 +362,12 @@ YPos:
 
 XPos:
 	.byte 124,116
+
+; The space is drawn as a sprite here (but we have plenty to spare)
+.proc PushST
+	.byte "Push ", $1a
+.endproc
+PromptLength = .sizeof(PushST)
 
 ; Initialise background
 BGInit:
