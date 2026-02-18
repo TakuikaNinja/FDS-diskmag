@@ -266,6 +266,8 @@ ProcessBGMode:
 	.addr Reading
 
 Intro:
+		lda #0
+		sta Frames
 		lda FDS_CTRL_MIRROR
 		and #%11110111
 		sta FDS_CTRL_MIRROR
