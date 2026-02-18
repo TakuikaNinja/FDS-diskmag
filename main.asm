@@ -174,7 +174,7 @@ MoveSpritesOffscreen:
 InitNametables:
 		lda #$20										; top-left
 		jsr InitNametable
-		lda #$28										; bottom-left
+		lda #$2C										; bottom-right (works for both arrangements)
 
 InitNametable:
 		ldx #$00										; clear nametable & attributes for high address held in A
@@ -224,9 +224,13 @@ LoadArticle:
 		sta ArticleAddr
 		lda Articles+1,x
 		sta ArticleAddr+1
+		
+LoadScreen:
 		jsr MoveSpritesOffscreen
 		jsr DisableRendering
 		jsr WaitForNMI
+		lda FDS_CTRL_MIRROR
+		sta FDS_CTRL
 		lda #$80										; upcoming bulk writes can take longer than 1 frame,
 		sta NMISoftDisable								; so soft-disable NMIs to avoid race conditions
 		jsr InitNametables
@@ -260,21 +264,74 @@ ProcessBGMode:
 	.addr Reading
 
 Intro:
+		lda FDS_CTRL_MIRROR
+		and #%11110111
+		sta FDS_CTRL_MIRROR
+		lda #_default_Intro
+		sta currentTrack
+		jsr sabre_playTrack
+		; palette data goes into vblank buffer to avoid visible stripes
+		vram_string $3f00, PaletteData, PaletteDataSize
+		inc NeedDraw
+		lda #<IntroScreen
+		sta ArticleAddr
+		lda #>IntroScreen
+		sta ArticleAddr+1
+		jsr LoadScreen
+
+@IntroLoop:
+		jsr ReadOrDownPads
+		lda P1_PRESSED
+		and #BUTTON_START
+		bne @Exit
+		
+		jsr IntroSprites
+		jsr WaitForNMI
+		jmp @IntroLoop
+
+@Exit:
 		inc Mode
 		rts
 
+IntroSprites:
+		ldx #0
+		ldy #0
+		jsr IntroSprite
+		ldx #4
+		iny
+		
+IntroSprite:
+		lda YPos,y
+		sta oam+0,x
+		lda #$0e
+		sta oam+1,x
+		lda #$03
+		sta oam+2,x
+		lda XPos,y
+		sta oam+3,x
+		rts
+
+YPos:
+	.byte 79,87
+
+XPos:
+	.byte 124,116
+
 ; Initialise background
 BGInit:
+		lda FDS_CTRL_MIRROR
+		ora #%00001000
+		sta FDS_CTRL_MIRROR
 		lda #$01										; default SMB1256W world number
 		sta World
 		lda #_default_Reading
 		sta currentTrack
 		jsr sabre_playTrack
-		jsr DisableRendering
+;		jsr DisableRendering
 		; palette data goes into vblank buffer to avoid visible stripes
-		vram_string $3f00, PaletteData, PaletteDataSize
-		inc NeedDraw
-	.if DEBUG = 1
+;		vram_string $3f00, PaletteData, PaletteDataSize
+;		inc NeedDraw
+	.if DEBUG = 1 && DEBUG_ARTICLE > 0
 		jsr sabre_stopTrack
 		lda #DEBUG_ARTICLE
 		sta ArticleID
@@ -528,11 +585,13 @@ SubYScroll:
 ; PPUADDR ends at $3F20 before the next write (avoids rare palette corruption)
 ; (palette entries will never be changed anyway, so we might as well set them all)
 .proc PaletteData
-	.repeat 8
-	.byte $0f, $00, $10, $20
-	.endrepeat
+	.incbin "Screens/palettes.pal"
+	.incbin "Screens/palettes.pal"
 .endproc
 PaletteDataSize = .sizeof(PaletteData)
+
+IntroScreen:
+.incbin "Screens/intro.nam.out"
 
 ; Articles
 .include "Articles/common.asm"

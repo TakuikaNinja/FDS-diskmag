@@ -9,6 +9,11 @@ as in:
 - 2026 release
 - 0x4026 write (external connector output)
 
+Dreamful
+
+as in:
+- "dreamful/dream-filled disk" (夢いっぱいディスク)
+
 ## License
 
 This is absolutely going to be shareware.
@@ -36,7 +41,7 @@ Do I want JP/ENG language selections, or separate builds?
 ## Graphic Design
 
 - [ ] Text font
-- [ ] Article page layout
+- [x] Article page layout
 - [ ] Intro screen
 - [x] Menu interface
 - [ ] Screen transitions? (scroll, palette fade)
@@ -58,6 +63,6 @@ Sound driver: [Sabre](https://github.com/CutterCross/Sabre)
   - InfiniteEnd
   - Zorchenhimer
 - Chiptune Café
-- FamiWiki?
+- FamiWiki
 - Hidden Palace
 
