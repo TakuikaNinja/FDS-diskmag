@@ -20,6 +20,20 @@
 ;	sta StringStatus
 .endmacro
 
+; same as vram_string, but with tile coordinates
+.macro vram_addr_string base, tileX, tileY, addr16, length
+	.assert base >= $2000 && base < $3000, error, "invalid base address"
+	.assert tileX >= 0 && tileX < 32, error, "invalid tileX"
+	.assert tileY >= 0 && tileY < 30, error, "invalid tileY"
+	.assert length > 0, error, "invalid string size"
+	.assert length <= BUFFER_SIZE, warning, "string size exceeds buffer"
+	lda #>((base + (tileY << 5) + tileX))
+	ldx #<((base + (tileY << 5) + tileX))
+	ldy #(length)
+	jsr PrepareVRAMString
+	.addr addr16
+.endmacro
+
 ; macros for use with the FDS BIOS VRAM struct format
 
 ; convert X/Y tile coordinates to PPU nametable address

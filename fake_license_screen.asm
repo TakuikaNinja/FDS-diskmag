@@ -29,6 +29,7 @@ Bypass:
 		stx $4023
 		lda #$83
 		sta $4023										; reset disk registers
+		bit $4031										; clear byte transfer flag just in case
 		lda #$2e
 		sta $4025										; turn off drive motor
 		dex

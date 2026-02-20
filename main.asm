@@ -67,6 +67,17 @@ NonMaskableInterrupt:
 		lda NMIReady									; check if ready to do NMI logic (i.e. not a lag frame)
 		beq NotReady
 		
+		lda NeedIRQ
+		beq :+
+		
+		lda #<IRQ_TIMER
+		sta FDS_IRQ_TIMER_LOW
+		lda #>IRQ_TIMER
+		sta FDS_IRQ_TIMER_HI
+		lda #%00000010
+		sta FDS_IRQ_TIMER_CTRL
+		dec NeedIRQ										; clear flag
+:
 		jsr SpriteDMA
 		
 		lda NeedDraw									; transfer Data to PPU if required
@@ -116,11 +127,17 @@ IRQHandler:
 		bcc @Exit
   
 @TimerIRQ:
-		lda #$00
-		sta FDS_IRQ_TIMER_CTRL ; disable Timer IRQs
-
 		; <scroll split and/or further Timer IRQ handling goes here>
-
+		lda PPU_CTRL_MIRROR
+		and #%11111110
+		ora X_Scroll+1
+		ldx X_Scroll
+		ldy #0
+		bit PPU_STATUS
+		sta PPU_CTRL
+		stx PPU_SCROLL
+		sty PPU_SCROLL
+		sty FDS_IRQ_TIMER_CTRL							; disable Timer IRQs
 		jmp @Exit
   
 @Watchdog:
@@ -268,6 +285,8 @@ ProcessBGMode:
 Intro:
 		lda #0
 		sta Frames
+		sta X_Scroll
+		sta X_Scroll+1
 		lda FDS_CTRL_MIRROR
 		and #%11110111
 		sta FDS_CTRL_MIRROR
@@ -290,7 +309,13 @@ Intro:
 		bne @Exit
 		
 		jsr IntroSprites
+		jsr TextScroller
 		jsr WaitForNMI
+		inc X_Scroll
+		bne @IntroLoop
+		lda X_Scroll+1
+		eor #1
+		sta X_Scroll+1
 		jmp @IntroLoop
 
 @Exit:
@@ -370,6 +395,23 @@ XPos:
 	.byte "Push ", $1a
 .endproc
 PromptLength = .sizeof(PushST)
+
+TextData:
+	.res 32, 'A'
+	.res 32, 'B'
+
+TextScroller:
+		lda X_Scroll+1
+		beq :+
+		vram_addr_string $2000, 0, 24, (TextData), 32
+		jmp @done
+
+:
+		vram_addr_string $2400, 0, 24, (TextData+32), 32
+@done:
+		inc NeedDraw
+		inc NeedIRQ
+		rts
 
 ; Initialise background
 BGInit:

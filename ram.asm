@@ -7,9 +7,11 @@
 	NMIReady: .res 1
 	NeedDraw: .res 1
 	NeedPPUMask: .res 1
+	NeedIRQ: .res 1
 	Frames: .res 1
 	SpriteIdx: .res 1
 	SpriteXPos: .res 1
+	X_Scroll: .res 2
 	Mode: .res 1
 	ArticleID: .res 1
 	MenuIdx: .res 1
@@ -53,5 +55,11 @@
 	VRAM_BUFFER: .res $fe ; actual buffer
 
 ; rest of memory
+
+; DTE decompression buffer
+	DTE_BufferA: .res 32
+	DTE_BufferB: .res 32
+
+; Sabre
 	.include "SabreFiles/sabre_Misc_RAM.asm"
 
