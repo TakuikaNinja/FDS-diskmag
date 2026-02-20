@@ -400,16 +400,30 @@ TextData:
 	.res 32, 'A'
 	.res 32, 'B'
 
-TextScroller:
-		lda X_Scroll+1
-		beq :+
-		vram_addr_string $2000, 0, 24, (TextData), 32
-		jmp @done
+TextPtrs_Lo:
+	.lobytes TextData+32, TextData
+TextPtrs_Hi:
+	.hibytes TextData+32, TextData
 
-:
-		vram_addr_string $2400, 0, 24, (TextData+32), 32
-@done:
+PPUAddrs_Hi:
+	.byte $27, $23
+
+TextScroller:
+		lda X_Scroll
+		bne NoUpdate
+		ldy X_Scroll+1
+		lda TextPtrs_Lo,y
+		sta TextPtr
+		lda TextPtrs_Hi,y
+		sta TextPtr+1
+		lda PPUAddrs_Hi,y
+		ldx #$00
+		ldy #32
+		jsr PrepareVRAMString
+TextPtr:
+	.addr TextData
 		inc NeedDraw
+NoUpdate:
 		inc NeedIRQ
 		rts
 
