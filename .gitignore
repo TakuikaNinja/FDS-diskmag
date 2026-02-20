@@ -11,5 +11,8 @@ Thumbs.db
 *.map.txt
 *.o
 *.zip
+*.exe
 zip.in
 Drafts/
+Screens/dte
+Screens/vramstruct

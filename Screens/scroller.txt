@@ -1,0 +1,4 @@
+Hello, world! This is a bunch of text designed to test the scroller DTE implementation.
+This line is after a newline.
+There should be way more than 64 total characters here, so the buffers need to be updated dynamically with decoded DTE data.
+Hope this works properly...

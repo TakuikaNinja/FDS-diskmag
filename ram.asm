@@ -12,6 +12,9 @@
 	SpriteIdx: .res 1
 	SpriteXPos: .res 1
 	X_Scroll: .res 2
+	DTE_Ptr: .res 2
+	DTE_Buffer_Idx: .res 1
+	DTE_Row: .res 1
 	Mode: .res 1
 	ArticleID: .res 1
 	MenuIdx: .res 1
@@ -57,8 +60,7 @@
 ; rest of memory
 
 ; DTE decompression buffer
-	DTE_BufferA: .res 32
-	DTE_BufferB: .res 32
+	DTE_Buffer: .res 256
 
 ; Sabre
 	.include "SabreFiles/sabre_Misc_RAM.asm"

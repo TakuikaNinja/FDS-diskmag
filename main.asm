@@ -287,6 +287,13 @@ Intro:
 		sta Frames
 		sta X_Scroll
 		sta X_Scroll+1
+		jsr InitDTE
+		
+@InitialFill:
+		jsr DecodeDTE
+		lda DTE_Buffer_Idx
+		bpl @InitialFill
+		
 		lda FDS_CTRL_MIRROR
 		and #%11110111
 		sta FDS_CTRL_MIRROR
@@ -313,8 +320,9 @@ Intro:
 		jsr WaitForNMI
 		inc X_Scroll
 		bne @IntroLoop
-		lda X_Scroll+1
-		eor #1
+		inc DTE_Row
+		lda DTE_Row
+		and #1
 		sta X_Scroll+1
 		jmp @IntroLoop
 
@@ -396,35 +404,125 @@ XPos:
 .endproc
 PromptLength = .sizeof(PushST)
 
-TextData:
-	.res 32, 'A'
-	.res 32, 'B'
-
-TextPtrs_Lo:
-	.lobytes TextData+32, TextData
-TextPtrs_Hi:
-	.hibytes TextData+32, TextData
-
 PPUAddrs_Hi:
 	.byte $27, $23
 
 TextScroller:
+		lda DTE_Row
+		and #7
+		lsr a
+		ror a
+		ror a
+		ror a
+		sta temp
+		lda DTE_Buffer_Idx
+		and #$f0
+		cmp temp
+		beq :+
+
+		jsr DecodeDTE
+:
 		lda X_Scroll
 		bne NoUpdate
-		ldy X_Scroll+1
-		lda TextPtrs_Lo,y
+
+UpdateText:
+		lda temp
 		sta TextPtr
-		lda TextPtrs_Hi,y
-		sta TextPtr+1
+		ldy X_Scroll+1
 		lda PPUAddrs_Hi,y
 		ldx #$00
 		ldy #32
 		jsr PrepareVRAMString
 TextPtr:
-	.addr TextData
+	.addr DTE_Buffer
 		inc NeedDraw
+		
 NoUpdate:
 		inc NeedIRQ
+		rts
+
+; Init DTE buffers & variables
+InitDTE:
+		lda #0
+		tax
+@InitDTEBuffer:
+		sta DTE_Buffer,x
+		inx
+		bne @InitDTEBuffer
+		
+		sta DTE_Buffer_Idx
+		sta DTE_Row
+
+InitDTE_Ptr:
+		lda #<DTE_Data
+		sta DTE_Ptr
+		lda #>DTE_Data
+		sta DTE_Ptr+1
+		rts
+
+; Decode a single recursive DTE code, somewhat based on the implementation from:
+; https://github.com/pinobatch/rfk-nes
+; Clobbers AXY
+DecodeDTE:
+		ldy #0
+		lda (DTE_Ptr),y
+@DecodeCode:
+		bmi @doDTE										; D7 set = DTE code
+		beq @NullChar
+
+; non-DTE codes
+@OutputChar:
+; mask control codes if they ever appear
+		cmp #' '
+		bcs :+
+		lda #' '
+:
+; output character in A
+		ldx DTE_Buffer_Idx
+		sta DTE_Buffer,x
+		inc DTE_Buffer_Idx
+
+@incPtr:
+		inc DTE_Ptr
+		bne @Exit
+		inc DTE_Ptr+1
+@Exit:
+		rts
+
+; decode a byte pair:
+; 1. push the second byte to the stack
+; 2. decode the first byte
+; 3. pull & decode the second byte
+; 4. decrement the pointer to account for the extra increment during recursion
+@doDTE:
+		asl a
+		tax
+		lda DTE_Table+1,x
+		pha
+		lda DTE_Table,x
+		jsr @DecodeCode
+		pla
+		jsr @DecodeCode
+
+@decPtr:
+		lda DTE_Ptr
+		bne :+
+		dec DTE_Ptr+1
+:
+		dec DTE_Ptr
+		rts
+		
+; null terminator handling
+; fill buffer until 32 byte boundary, then reset pointer
+@NullChar:
+		lda DTE_Buffer_Idx
+		and #31
+		beq InitDTE_Ptr
+		
+		lda #' '
+		ldx DTE_Buffer_Idx
+		sta DTE_Buffer,x
+		inc DTE_Buffer_Idx
 		rts
 
 ; Initialise background
@@ -702,6 +800,13 @@ PaletteDataSize = .sizeof(PaletteData)
 
 IntroScreen:
 .incbin "Screens/intro.nam.out"
+
+DTE_Data:
+.incbin "Screens/scroller.dte"
+.byte 0 ; null terminator, just in case the compressor doesn't include it
+
+DTE_Table:
+.incbin "Screens/scroller.dtdict"
 
 ; Articles
 .include "Articles/common.asm"
