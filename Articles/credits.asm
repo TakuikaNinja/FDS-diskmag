@@ -1,7 +1,6 @@
 ; Credits & Greets
 
 Credits:
-;	encode_call Common
 	vram_addr $2000, 12, 4
 	encode_string INC1, COPY, "Credits:"
 	
@@ -43,8 +42,8 @@ Credits:
 	vram_addr $2000, 10, 23
 	encode_string INC1, COPY, "Zorchenhimer"
 	
-	vram_addr $2000, 8, 26
-	encode_string INC1, COPY, "Press B to exit"
+	encode_call Common
+	encode_call BottomEdge
 	
 	encode_terminator
 
