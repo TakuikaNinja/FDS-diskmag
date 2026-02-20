@@ -288,7 +288,8 @@ Intro:
 		sta X_Scroll
 		sta X_Scroll+1
 		jsr InitDTE
-		
+
+; Fill ~128 bytes in advance
 @InitialFill:
 		jsr DecodeDTE
 		lda DTE_Buffer_Idx
@@ -328,7 +329,7 @@ Intro:
 
 @Exit:
 		inc Mode
-		rts
+		jmp DisableRendering
 
 IntroSprites:
 		lda #$00
@@ -408,6 +409,8 @@ PPUAddrs_Hi:
 	.byte $27, $23
 
 TextScroller:
+; DTE_Row * 32 = DTE_Row << 5
+; but rotating right is faster
 		lda DTE_Row
 		and #7
 		lsr a
@@ -415,6 +418,8 @@ TextScroller:
 		ror a
 		ror a
 		sta temp
+
+; Ensure DTE decoding doesn't outpace the rendering
 		lda DTE_Buffer_Idx
 		and #$f0
 		cmp temp
@@ -422,6 +427,7 @@ TextScroller:
 
 		jsr DecodeDTE
 :
+; Update 32 columns for the nametable which just went offscreen
 		lda X_Scroll
 		bne NoUpdate
 
@@ -436,7 +442,8 @@ UpdateText:
 TextPtr:
 	.addr DTE_Buffer
 		inc NeedDraw
-		
+
+; Queue IRQ raster split
 NoUpdate:
 		inc NeedIRQ
 		rts
