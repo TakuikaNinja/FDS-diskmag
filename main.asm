@@ -409,7 +409,7 @@ PPUAddrs_Hi:
 	.byte $27, $23
 
 TextScroller:
-; DTE_Row * 32 = DTE_Row << 5
+; (DTE_Row % 8) * 32 = (DTE_Row & 7) << 5
 ; but rotating right is faster
 		lda DTE_Row
 		and #7

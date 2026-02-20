@@ -22,7 +22,7 @@ This is absolutely going to be shareware.
 
 - [ ] Disk files
 - [ ] Load routine launcher
-- [ ] Text compression/decompression scheme
+- [X] Text compression/decompression scheme (DTE)
 
 ## Articles/Features
 
@@ -42,7 +42,7 @@ Do I want JP/ENG language selections, or separate builds?
 
 - [ ] Text font
 - [x] Article page layout
-- [ ] Intro screen
+- [X] Intro screen
 - [x] Menu interface
 - [ ] Screen transitions? (scroll, palette fade)
 
