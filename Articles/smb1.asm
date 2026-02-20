@@ -21,7 +21,7 @@ SMB1:
 	encode_string INC1, COPY, "and press START to begin"
 	
 	vram_addr $2000, 10, 19
-	encode_string INC1, COPY, "World ="
+	encode_string INC1, COPY, "World = 01"
 	
 	encode_call Common
 	encode_call BottomEdge

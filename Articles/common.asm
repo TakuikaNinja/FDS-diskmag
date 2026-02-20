@@ -52,11 +52,32 @@ EdgePatterns:
 
 Attributes:
 	.dbyt $23c0
-	encode_length INC1, FILL, 64
-	.byte $00
+	encode_length INC1, COPY, 64
+	.byte ((0 << 6) | (2 << 4) | (2 << 2) | (2 << 0))
+	
+	.repeat 6
+	.byte ((0 << 6) | (0 << 4) | (2 << 2) | (2 << 0))
+	.endrepeat
+	
+	.byte ((2 << 6) | (0 << 4) | (2 << 2) | (2 << 0))
+	
+	.repeat 7
+	.byte ((0 << 6) | (2 << 4) | (0 << 2) | (2 << 0))
+	.byte 0,0,0,0,0,0
+	.byte ((2 << 6) | (0 << 4) | (2 << 2) | (0 << 0))
+	.endrepeat
+	
 	.dbyt $2bc0
-	encode_length INC1, FILL, 64
-	.byte $00
+	encode_length INC1, COPY, 56
+	.repeat 7
+	.byte ((0 << 6) | (2 << 4) | (0 << 2) | (2 << 0))
+	.byte 0,0,0,0,0,0
+	.byte ((2 << 6) | (0 << 4) | (2 << 2) | (0 << 0))
+	.endrepeat
+	
+	.dbyt $2bf8
+	encode_length INC1, FILL, 8
+	.byte ((0 << 6) | (0 << 4) | (2 << 2) | (2 << 0))
 	encode_return
 
 ; for dual-screen articles
@@ -81,5 +102,9 @@ BottomEdge:
 	vram_addr $2000, 1, 29
 	encode_length INC1, FILL, 30
 	.byte $0d
+	
+	.dbyt $23f8
+	encode_length INC1, FILL, 8
+	.byte ((0 << 6) | (0 << 4) | (2 << 2) | (2 << 0))
 	encode_return
 

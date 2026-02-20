@@ -713,10 +713,12 @@ HandleExit:
 		rts
 		
 LoadMenu:
-		lda #$00
-		sta ArticleID
-		sta Y_Scroll
-		sta Y_Scroll+1
+		ldy #$00
+		sty ArticleID
+		sty Y_Scroll
+		sty Y_Scroll+1
+		iny
+		sty World
 		jsr SetYScroll
 		jsr LoadArticle
 :
