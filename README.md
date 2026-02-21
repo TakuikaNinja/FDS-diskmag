@@ -26,7 +26,7 @@ The name "Dreamful" was chosen as a reference to the slogan for the FDS: 夢い�
 - I2 Souseiki Fammy
 - Battle Battle League prototype
 - Review of Ravi and Navi
-- Utility to unlock glitched words (256W) in FDS SMB1
+- Utility to unlock glitched worlds (256W) in FDS SMB1
 - Credits and greets
 
 ## Building
