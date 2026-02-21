@@ -12,10 +12,7 @@ Reset:
 		tax
 @clrmem:
 		sta $00,x
-		cpx #4											; preserve BIOS stack variables at $0100~$0103
-		bcc :+
 		sta $0100,x
-:
 		sta $0200,x
 		dec $0200,x
 		sta $0300,x
@@ -26,7 +23,7 @@ Reset:
 		inx
 		bne @clrmem
 		
-;		jsr MoveSpritesOffscreen
+		jsr InitZPStack
 		
 		; set up custom IRQ handler
 		lda #<IRQHandler
@@ -52,7 +49,7 @@ Main:
 		jsr ProcessBGMode
 		jsr WaitForNMI
 		beq Main										; back to main loop
-	
+
 ; NMI handler
 NonMaskableInterrupt:
 		pha												; back up A/X/Y
@@ -160,6 +157,19 @@ IRQHandler:
 		pla
 		rti
 
+; Init BIOS ZP & stack variables to the expected values after clearing them
+.proc ZPStackData
+	.byte $ff, $2e, 0, 0, 0, $06, $10, $c0, $80, $35, $53
+.endproc
+
+InitZPStack:
+		ldx #.sizeof(ZPStackData)
+@loop:
+		lda ZPStackData,x
+		sta a:FDS_EXT_MIRROR,x
+		dex
+		bpl @loop
+		rts
 
 EnableRendering:
 		lda #%00011110									; enable rendering and queue it for next NMI
