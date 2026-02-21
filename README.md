@@ -14,7 +14,7 @@ This software is noncommercial shareware. You are free to redistribute this soft
 
 ## Overview
 
-This is (probably) the first English diskmag for the FDS. This issue celebrates the 40th anniversary of the Famicom addon (1986-02-21).
+Dreamful is (probably) the first English diskmag for the FDS. This issue celebrates the 40th anniversary of the Famicom addon (1986-02-21).
 
 The name "Dreamful" was chosen as a reference to the slogan for the FDS: 夢いっぱいディスク (dream-filled/dreamful disk)
 

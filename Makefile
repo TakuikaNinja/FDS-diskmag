@@ -24,7 +24,7 @@ $(ZIP_NAME).zip: zip.in
 
 zip.in: $(GAME).fds
 	echo $(GAME).fds > $@
-#	echo README.md >> $@
+	echo README.md >> $@
 
 .PHONY: clean dist zip
 
